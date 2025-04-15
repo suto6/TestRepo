@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Simple Quiz App</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+      max-width: 600px;
+      margin: auto;
+    }
+    .quiz-box {
+      border: 1px solid #ccc;
+      border-radius: 10px;
+      padding: 20px;
+    }
+    .question {
+      font-size: 20px;
+      margin-bottom: 15px;
+    }
+    .options {
+      margin-bottom: 20px;
+    }
+    .options button {
+      display: block;
+      width: 100%;
+      margin-bottom: 10px;
+      padding: 10px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+    #nextBtn {
+      padding: 10px 20px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+    #score {
+      font-weight: bold;
+      font-size: 22px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Quiz App</h1>
+  <div class="quiz-box">
+    <div class="question" id="question">Loading...</div>
+    <div class="options" id="options"></div>
+    <button id="nextBtn">Next</button>
+    <div id="score"></div>
+  </div>
+
+  <script>
+    const quizData = [
+      {
+        question: "What is the capital of France?",
+        options: ["Berlin", "Madrid", "Paris", "Rome"],
+        answer: "Paris",
+      },
+      {
+        question: "Which language runs in a web browser?",
+        options: ["Java", "C", "Python", "JavaScript"],
+        answer: "JavaScript",
+      },
+      {
+        question: "What does HTML stand for?",
+        options: [
+          "Hyper Trainer Marking Language",
+          "Hyper Text Markup Language",
+          "Hyper Text Marketing Language",
+          "Hyper Transfer Markup Language"
+        ],
+        answer: "Hyper Text Markup Language",
+      },
+    ];
+
+    let currentQuestion = 0;
+    let score = 0;
+
+    const questionEl = document.getElementById("question");
+    const optionsEl = document.getElementById("options");
+    const nextBtn = document.getElementById("nextBtn");
+    const scoreEl = document.getElementById("score");
+
+    function loadQuestion() {
+      const q = quizData[currentQuestion];
+      questionEl.textContent = q.question;
+      optionsEl.innerHTML = "";
+
+      q.options.forEach(option => {
+        const btn = document.createElement("button");
+        btn.textContent = option;
+        btn.onclick = () => checkAnswer(option);
+        optionsEl.appendChild(btn);
+      });
+    }
+
+    function checkAnswer(selected) {
+      const correct = quizData[currentQuestion].answer;
+      if (selected === correct) {
+        score++;
+      }
+      nextBtn.disabled = false;
+    }
+
+    nextBtn.addEventListener("click", () => {
+      currentQuestion++;
+      if (currentQuestion < quizData.length) {
+        loadQuestion();
+        nextBtn.disabled = true;
+      } else {
+        showScore();
+      }
+    });
+
+    function showScore() {
+      questionEl.style.display = "none";
+      optionsEl.style.display = "none";
+      nextBtn.style.display = "none";
+      scoreEl.textContent = `You scored ${score} out of ${quizData.length}!`;
+    }
+
+    // Initialize
+    loadQuestion();
+    nextBtn.disabled = true;
+  </script>
+</body>
+</html>
